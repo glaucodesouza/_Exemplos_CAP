@@ -1,0 +1,120 @@
+<mvc:View
+    controllerName="validadorcarga.controller.Object"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:semantic="sap.f.semantic">
+
+    <semantic:SemanticPage
+        id="page"
+        headerPinnable="false"
+        toggleHeaderOnTitleClick="false">
+
+        <semantic:titleHeading>
+            <Title 
+                id="_IDGenTitle1"
+                text="Validação {objectView>/title}"
+                level="H2"/>
+        </semantic:titleHeading>
+
+        <semantic:content>
+            <Table
+                id="table"
+                width="auto"
+                items="{modelValidacaoDetail>/}"
+                noDataText="Sem dados"
+                busyIndicatorDelay=""
+                growing="true"
+                growingScrollToLoad="true"
+                updateFinished=".onUpdateFinished"
+                >
+
+                <headerToolbar>
+                    <OverflowToolbar id="_IDGenOverflowToolbar1">
+                        <Title
+                            id="tableHeader"
+                            text="{objectView>/description}"
+                            level="H3"/>
+                    </OverflowToolbar>
+                </headerToolbar>
+
+                <columns>
+                    <Column id="_IDGenColumn15" >
+                        <Text id="_IDGenText15" text="Doc.Type Code" />
+                    </Column>
+                    <Column id="_IDGenColumn16" >
+                        <Text id="_IDGenText16" text="Doc.Type Code Desc." />
+                    </Column>
+                    <Column id="_IDGenColumn1">
+                        <Text id="_IDGenText1" text="CDS Origem"/>
+                    </Column>
+                    <Column id="_IDGenColumn2">
+                        <Text id="_IDGenText2" text="ID"/>
+                    </Column>
+                    <Column id="_IDGenColumn3" >
+                        <Text id="_IDGenText3" text="PO" />
+                    </Column>
+                    <Column id="_IDGenColumn4" >
+                        <Text id="_IDGenText4" text="PO Item" />
+                    </Column>
+                    <Column id="_IDGenColumn5" >
+                        <Text id="_IDGenText5" text="Doc.Mat" />
+                    </Column>
+                    <Column id="_IDGenColumn6" >
+                        <Text id="_IDGenText6" text="Doc.Mat.Itm." />
+                    </Column>
+                    <Column id="_IDGenColumn7" >
+                        <Text id="_IDGenText7" text="CpuDt" />
+                    </Column>
+                    <Column id="_IDGenColumn8" >
+                        <Text id="_IDGenText8" text="Tp.Mov." />
+                    </Column>
+                    <Column id="_IDGenColumn9" >
+                        <Text id="_IDGenText9" text="Fatura" />
+                    </Column>
+                    <Column id="_IDGenColumn10" >
+                        <Text id="_IDGenText10" text="Fat.Itm." />
+                    </Column>
+                    <Column id="_IDGenColumn11" >
+                        <Text id="_IDGenText11" text="Fat.CpuDt" />
+                    </Column>
+                    <Column id="_IDGenColumn12" >
+                        <Text id="_IDGenText12" text="Doc.Cont." />
+                    </Column>
+                    <Column id="_IDGenColumn13" >
+                        <Text id="_IDGenText13" text="Docnum" />
+                    </Column>
+                    <Column id="_IDGenColumn14" >
+                        <Text id="_IDGenText14" text="Itmnum" />
+                    </Column>
+                </columns>
+
+                <items>
+                    <ColumnListItem id="_IDGenColumnListItem1"
+                        
+                        >
+                        <cells>
+                            <Text id="_IDGenText31" text="{modelValidacaoDetail>tipoValidacaoCod}"/>
+                            <Text id="_IDGenText32" text="{modelValidacaoDetail>tipoValidacaoDesc}"/>
+                            <Text id="_IDGenText17" text="{modelValidacaoDetail>cds_origem}"/>
+                            <Text id="_IDGenText18" text="{modelValidacaoDetail>ID}"/>
+                            <Text id="_IDGenText19" text="{modelValidacaoDetail>po}"/>
+                            <Text id="_IDGenText20" text="{modelValidacaoDetail>poItem}"/>
+                            <Text id="_IDGenText21" text="{modelValidacaoDetail>matDoc}"/>
+                            <Text id="_IDGenText22" text="{modelValidacaoDetail>matDocItem}"/>
+                            <Text id="_IDGenText23" text="{modelValidacaoDetail>cpuDt}"/>
+                            <Text id="_IDGenText24" text="{modelValidacaoDetail>tpMov}"/>
+                            <Text id="_IDGenText25" text="{modelValidacaoDetail>fatDoc}"/>
+                            <Text id="_IDGenText26" text="{modelValidacaoDetail>FatdocItem}"/>
+                            <Text id="_IDGenText27" text="{modelValidacaoDetail>fatCpudt}"/>
+                            <Text id="_IDGenText28" text="{modelValidacaoDetail>Accdoc}"/>
+                            <Text id="_IDGenText29" text="{modelValidacaoDetail>docNum}"/>
+                            <Text id="_IDGenText30" text="{modelValidacaoDetail>docItem}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </semantic:content>
+
+    </semantic:SemanticPage>
+</mvc:View>
