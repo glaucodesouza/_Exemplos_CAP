@@ -740,17 +740,46 @@ module.exports = cds.service.impl(async function () {
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
-            .where `outlier = false
-                    and ASSETTYPECODE in ('00300','00400','00500','00600','03300','03400','07400','07500','07600')
-                    and occodedest is null
-                    and octypedest is null
-                    and ocdescrdest is null
-                    and occode is null
-                    and octype is null
-                    and ocdescr is null`
+            // .where `outlier = false
+            //         and ASSETTYPECODE in ('00300','00400','00500','00600','03300','03400','07400','07500','07600')
+            //         and occodedest is null
+            //         and octypedest is null
+            //         and ocdescrdest is null
+            //         and occode is null
+            //         and octype is null
+            //         and ocdescr is null`
             .limit(10)
         );
 
+
+        if (oSelect.length == 0) {
+        //teste glauco
+        let dados_teste = [{
+            po      : "101010",
+            poItem  : "10",
+            docNum  : "589098",
+            docItem : "10",
+            gjahr   : "2019",
+            belnr   : "5100000087",
+            buzei   : "00001",
+           cpuDt    : "25/12/1998",
+           cpuTm    : "23:59:59",
+           serialNo : "87897as89789789789",
+           batch    : "",
+           nm       : "90784390",
+       
+           tipoValidacaoCod: 1,
+           tipoValidacaoDesc: "Descrição do tipo de validação teste 1"
+        }];
+        return dados_teste;
+        }
+
+        //Preencher o campo Tipo de Validação
+        oSelect.forEach(result => {
+            result.tipoValidacaoCod = 1;
+            result.tipoValidacaoDesc = 'Verificar se tem registro sem Objeto contábil com DOCTYPECODE *300, *400, *500 e *600';
+        });
+        debugger;
         return oSelect;
         // return oSelect.count;
     });
@@ -758,12 +787,28 @@ module.exports = cds.service.impl(async function () {
     this.on("selectValidacao2", async req => {
         // Validacao 2 - Verificar se tem registro sem Grupo de Mercadoria
         const oSelect = await db.run(
-            SELECT.one.columns(["COUNT(*) as count"])
+            SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
-            .where `outlier = false and gm is null`
+            // .where `outlier = false and gm is null and status = 'NotProcessed'`
+            .limit(10)
         );
     
+        //Preencher o campo Tipo de Validação
+        oSelect.forEach(result => {
+            result.tipoValidacaoCod = 2;
+            result.tipoValidacaoDesc = 'Verificar se tem registro sem Grupo de Mercadoria';
+        });
+
         return oSelect;
+
+        //original validação 2
+        // const oSelect = await db.run(
+        //     SELECT.one.columns(["COUNT(*) as count"])
+        //     .from(ASSET_VERSION_INBOUND)
+        //     .where `outlier = false and gm is null and status = 'NotProcessed'`
+        // );
+    
+        // return oSelect;
     });
 
     this.on("selectValidacao3", async req => {
