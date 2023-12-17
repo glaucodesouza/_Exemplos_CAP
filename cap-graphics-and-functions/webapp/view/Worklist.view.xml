@@ -1,0 +1,290 @@
+<mvc:View
+    controllerName="dashtracking.controller.Worklist"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:viz="sap.viz.ui5.controls"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:layout="sap.ui.layout"
+    height="100%">
+    <f:DynamicPage id="dynamicPageId" headerExpanded="{/headerExpanded}" toggleHeaderOnTitleClick="{/titleClickable}">
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="Dashboard Asset Tracking"/>
+                </f:heading>
+            </f:DynamicPageTitle>
+        </f:title>
+        <!-- DynamicPage Header -->
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <fb:FilterBar id="filterbar" useToolbar="false" showFilterConfiguration="false" search=".onPressExecutar">
+                    <fb:filterGroupItems>
+                        <fb:FilterGroupItem name="dtInicial" label="Data Inicial" groupName="dtInicial" visibleInFilterBar="true">
+                            <fb:control>
+                                <DatePicker id="inpDataInicial" valueFormat="dd/MM/yyyy" enabled="true" width="180px"> 
+                                    <layoutData>
+                                        <layout:GridData id="_IDGenGridData2" span="XL2 L2 M2 S12" />
+                                    </layoutData>
+                                </DatePicker>
+                            </fb:control>
+                        </fb:FilterGroupItem>
+                        <fb:FilterGroupItem name="dtFinal" label="Data Final" groupName="dtFinal" visibleInFilterBar="true">
+                            <fb:control>
+                                <DatePicker id="inpDataFinal" valueFormat="dd/MM/yyyy" enabled="true" width="180px"> 
+                                    <layoutData>
+                                        <layout:GridData id="_IDGenGridData4" span="XL2 L2 M2 S12" />
+                                    </layoutData>
+                                </DatePicker>
+                            </fb:control>
+                        </fb:FilterGroupItem>
+                    </fb:filterGroupItems>
+                </fb:FilterBar>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <FlexBox
+				direction="Column"
+                alignItems="Center"
+                class="sapUiSmallMargin">
+                <FlexBox
+                    alignItems="Center"
+                    justifyContent="Center"
+                    alignContent="SpaceBetween"
+                    wrap="Wrap">
+                    <!--    
+                    1.B	chart Version/Outliers por Data
+                    -->
+                    <f:Card id="_IDGenCard1b" width="32rem" height='32rem' class="sapUiSmallMargin">
+                        <f:content>
+                            <VBox id="_IDGenVBox1b">
+                                <viz:Popover id="idPopOver1b"></viz:Popover>
+                                <viz:VizFrame id="idVizFrameChart1b" uiConfig="{applicationSet:'fiori'}" height='32rem' width="32rem" vizType='stacked_column' >
+                                    <viz:dataset>
+                                        <viz.data:FlattenedDataset id="_IDGenFlattenedDataset1b" data="{card1b>/}">
+                                            <viz.data:dimensions>
+                                                <viz.data:DimensionDefinition id="_IDGenDimensionDefinition1b" name="Mês" value="{card1b>Mês}" />
+                                            </viz.data:dimensions>
+                                            <viz.data:measures>
+                                                <viz.data:MeasureDefinition id="_IDGenMeasureDefinition1b1" name="Version" value="{card1b>Version}" />
+                                                <viz.data:MeasureDefinition id="_IDGenMeasureDefinition1b2" name="Outlier" value="{card1b>Outlier}" />
+                                                <!-- <viz.data:MeasureDefinition id="_IDGenMeasureDefinition1b3" name="countTotal"   value="{card1b>countTotal}" /> -->
+                                            </viz.data:measures>
+                                        </viz.data:FlattenedDataset>
+                                    </viz:dataset>
+
+                                    <viz:feeds>
+                                        <viz.feeds:FeedItem id="_IDGenFeedItem1b1" uid="valueAxis"    type="Measure"   values="Version" />
+                                        <viz.feeds:FeedItem id="_IDGenFeedItem1b2" uid="valueAxis"    type="Measure"   values="Outlier" />
+                                        <!-- <viz.feeds:FeedItem id="_IDGenFeedItem1b3" uid="valueAxis"    type="Measure"   values="countTotal" /> -->
+                                        <viz.feeds:FeedItem id="_IDGenFeedItem1b4" uid="categoryAxis" type="Dimension" values="Mês" />
+                                    </viz:feeds>
+                                </viz:VizFrame>
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <!--    
+                    2B	chart Monitor do Fisco 
+                    -->
+                    <f:Card id="_IDGenCard2b" width="64rem" height="32rem" class="sapUiSmallMargin">
+                        <f:content>
+                            <VBox id="_IDGenVBox2b">
+                                <HBox id="_IDGenHBox2b" >
+                                    <viz:Popover id="idPopOver2b"></viz:Popover>
+                                    <viz:VizFrame id="idVizFrameChart2b" uiConfig="{applicationSet:'fiori'}" height='32rem' width="64rem" vizType='100_stacked_bar' >
+                                        <viz:dataset>
+                                            <viz.data:FlattenedDataset id="_IDGenFlattenedDataset2b" data="{card2b>/}">
+                                                <viz.data:dimensions>
+                                                    <viz.data:DimensionDefinition id="_IDGenDimensionDefinition2b1" name="Asset Type Code"    value="{card2b>Asset Type Code}" />
+                                                    <viz.data:DimensionDefinition id="_IDGenDimensionDefinition2b2" name="Doc Type Code"      value="{card2b>Doc Type Code}" />
+                                                </viz.data:dimensions>
+                                                <viz.data:measures>
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition2b" name="Contador" value="{card2b>Contador}" />
+                                                </viz.data:measures>
+                                            </viz.data:FlattenedDataset>
+                                        </viz:dataset>
+
+                                        <viz:feeds>
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem4" uid="valueAxis"     type="Measure"      values="Contador" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem5" uid="categoryAxis"  type="Dimension"    values="Asset Type Code" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem6" uid="color"         type="Dimension"    values="Doc Type Code" />
+                                        </viz:feeds>
+                                    </viz:VizFrame>
+                                </HBox>
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <!--    
+                    2A	chart Monitor do Fisco 
+                    -->
+                    <f:Card id="_IDGenCard2" width="32rem" height="32rem" class="sapUiSmallMargin">
+                        <f:content>
+                            <VBox id="_IDGenVBox2">
+                                    <viz:Popover id="idPopOver1"></viz:Popover>
+                                    <viz:VizFrame id="idVizFrameChart2a" uiConfig="{applicationSet:'fiori'}" height='32rem' width="32rem" vizType='donut' >
+                                        <viz:dataset>
+                                            <viz.data:FlattenedDataset id="_IDGenFlattenedDataset11" data="{card2a>/}">
+                                                <viz.data:dimensions>
+                                                    <viz.data:DimensionDefinition id="_IDGenDimensionDefinition11" name="Tipo" value="{card2a>Tipo}" />
+                                                </viz.data:dimensions>
+                                                <viz.data:measures>
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition11" name="Contador" value="{card2a>Contador}" />
+                                                </viz.data:measures>
+                                            </viz.data:FlattenedDataset>
+                                        </viz:dataset>
+
+                                        <viz:feeds>
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem11" uid="size"  type="Measure"   values="Contador" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem21" uid="color" type="Dimension" values="Tipo" />
+                                        </viz:feeds>
+                                    </viz:VizFrame>
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <!--    
+                    2.C	chart Monitor Fisco
+                    Status IVA x Cenário
+                    -->
+                    <f:Card id="_IDGenCard2c" width="32rem" height="32rem" class="sapUiSmallMargin">
+                        <f:content>
+                            <VBox id="_IDGenVBox2c">
+                                <HBox id="_IDGenHBox32c" >
+                                    <viz:Popover id = "idPopOver"></viz:Popover>
+                                    <viz:VizFrame id = "idVizFrameChart2c" uiConfig = "{applicationSet:'fiori'}"
+                                        height='32rem' width="32rem" vizType = 'heatmap'>
+                                        <viz:dataset>
+                                            <viz.data:FlattenedDataset id="_IDGenFlattenedDataset1" data="{card2c>/}">
+                                                <viz.data:dimensions>
+                                                    <viz.data:DimensionDefinition id="_IDGenDimensionDefinition1" name = "Status"  value = "{Status}" />
+                                                </viz.data:dimensions>
+                                                <viz.data:dimensions>
+                                                    <viz.data:DimensionDefinition id="_IDGenDimensionDefinition2" name = "Cenario"  value = "{Cenario}" />
+                                                </viz.data:dimensions>
+                                                <viz.data:measures>
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition1" name = "Contador" value = "{Contador}" />
+                                                </viz.data:measures>
+                                            </viz.data:FlattenedDataset>
+                                        </viz:dataset>
+
+                                        <viz:feeds>
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem1" uid = "color"          type = "Measure"    values = "Contador" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem2" uid = "categoryAxis"   type = "Dimension"  values = "Cenario" />    
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem3" uid = "categoryAxis2"  type = "Dimension"  values = "Status" />
+                                        </viz:feeds>
+                                    </viz:VizFrame>
+                                </HBox>
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <!--    
+                    2.D	chart Assets Criados x Trackings Criados
+                    -->
+                    <f:Card id="_IDGenCard2d" width="32rem" height="32rem" class="sapUiSmallMargin">
+                        <f:content>
+                            <VBox id="_IDGenVBox2d">
+                                <HBox id="_IDGenHBox2d" >
+                                    <viz:Popover id="idPopOver2d"></viz:Popover>
+                                    <viz:VizFrame id="idVizFrameChart2d" uiConfig="{applicationSet:'fiori'}" height='32rem' width="32rem" vizType='line' >
+                                        <viz:dataset>
+                                            <viz.data:FlattenedDataset id="_IDGenFlattenedDataset2d" data="{card2d>/}">
+                                                <viz.data:dimensions>
+                                                    <viz.data:DimensionDefinition id="_IDGenDimensionDefinition2d" name="Mês" value="{card2d>Mês}" />
+                                                </viz.data:dimensions>
+                                                <viz.data:measures>
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition2d1" name="V0" value="{card2d>V0}" />
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition2d2" name="VN" value="{card2d>VN}" />
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition2d3" name="Total" value="{card2d>Total}" />
+                                                </viz.data:measures>
+                                            </viz.data:FlattenedDataset>
+                                        </viz:dataset>
+
+                                        <viz:feeds>
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem2d1" uid="valueAxis"    type="Measure"   values="V0" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem2d2" uid="valueAxis"    type="Measure"   values="VN" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem2d3" uid="valueAxis"    type="Measure"   values="Total" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem2d4" uid="categoryAxis" type="Dimension" values="Mês" />
+                                        </viz:feeds>
+                                    </viz:VizFrame>
+                                </HBox>
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <!--    
+                    3.A	chart Outliers: Documentos Não Processados: Classificados x Não Classificados
+                    -->
+                    <f:Card id="_IDGenCard3a" width="32rem" height="32rem" class="sapUiSmallMargin" visible="true">
+                        <f:content>
+                            <VBox id="_IDGenVBox3a">
+                                <HBox id="_IDGenHBox3a" >
+                                    <viz:Popover id="idPopOver3a"></viz:Popover>
+                                    <viz:VizFrame id="idVizFrameChart3a" uiConfig="{applicationSet:'fiori'}" height='32rem' width="32rem" vizType='line' >
+                                        <viz:dataset>
+                                            <viz.data:FlattenedDataset id="_IDGenFlattenedDataset3a" data="{card3a>/}">
+                                                <viz.data:dimensions>
+                                                    <viz.data:DimensionDefinition id="_IDGenDimensionDefinition3a" name="Mês" value="{card3a>Mês}" />
+                                                </viz.data:dimensions>
+                                                <viz.data:measures>
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition3a1" name="Classif."    value="{card3a>Classif.}" />
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition3a2" name="Não Classif." value="{card3a>Não Classif.}" />
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition3a3" name="Total"        value="{card3a>Total}" />
+                                                </viz.data:measures>
+                                            </viz.data:FlattenedDataset>
+                                        </viz:dataset>
+
+                                        <viz:feeds>
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem3a1" uid="valueAxis"    type="Measure"   values="Classif." />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem3a2" uid="valueAxis"    type="Measure"   values="Não Classif." />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem3a3" uid="valueAxis"    type="Measure"   values="Total" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem3a4" uid="categoryAxis" type="Dimension" values="Mês" />
+                                        </viz:feeds>
+                                    </viz:VizFrame>
+                                </HBox>
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+
+                    <!--    
+                    3B	chart Outliers
+                    Motivo por DocTypeCode + Não Classificados
+                    -->
+                    <f:Card id="_IDGenCard3b" width="64rem" height="32rem" class="sapUiSmallMargin">
+                        <f:content>
+                            <VBox id="_IDGenVBox3b">
+                                <HBox id="_IDGenHBox3b" >
+                                    <viz:Popover id="idPopOver3b"></viz:Popover>
+                                    <viz:VizFrame id="idVizFrameChart3b" uiConfig="{applicationSet:'fiori'}" height='32rem' width="64rem" vizType='100_stacked_bar' >
+                                        <viz:dataset>
+                                            <viz.data:FlattenedDataset id="_IDGenFlattenedDataset3b" data="{card3b>/}">
+                                                <viz.data:dimensions>
+                                                    <viz.data:DimensionDefinition id="_IDGenDimensionDefinition3b1" name="Outlier Descr"      value="{card3b>Outlier Descr}" />
+                                                    <viz.data:DimensionDefinition id="_IDGenDimensionDefinition3b2" name="Doc Type Code"      value="{card3b>Doc Type Code}" />
+                                                </viz.data:dimensions>
+                                                <viz.data:measures>
+                                                    <viz.data:MeasureDefinition id="_IDGenMeasureDefinition3b" name="Contador" value="{card3b>Contador}" />
+                                                </viz.data:measures>
+                                            </viz.data:FlattenedDataset>
+                                        </viz:dataset>
+
+                                        <viz:feeds>
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem31" uid="valueAxis"     type="Measure"      values="Contador" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem32" uid="categoryAxis"  type="Dimension"    values="Outlier Descr" />
+                                            <viz.feeds:FeedItem id="_IDGenFeedItem33" uid="color"         type="Dimension"    values="Doc Type Code" />
+                                        </viz:feeds>
+                                    </viz:VizFrame>
+                                </HBox>
+                            </VBox>
+                        </f:content>
+                    </f:Card>
+                </FlexBox>
+            </FlexBox>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>
