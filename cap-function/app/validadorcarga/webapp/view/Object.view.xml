@@ -39,12 +39,6 @@
                 </headerToolbar>
 
                 <columns>
-                    <Column id="_IDGenColumn15" >
-                        <Text id="_IDGenText15" text="Doc.Type Code" />
-                    </Column>
-                    <Column id="_IDGenColumn16" >
-                        <Text id="_IDGenText16" text="Doc.Type Code Desc." />
-                    </Column>
                     <Column id="_IDGenColumn1">
                         <Text id="_IDGenText1" text="CDS Origem"/>
                     </Column>
@@ -87,6 +81,12 @@
                     <Column id="_IDGenColumn14" >
                         <Text id="_IDGenText14" text="Itmnum" />
                     </Column>
+                    <Column id="_IDGenColumn15" >
+                        <Text id="_IDGenText15" text="Doc.Type Code" />
+                    </Column>
+                    <Column id="_IDGenColumn16" >
+                        <Text id="_IDGenText16" text="Doc.Type Code Desc." />
+                    </Column>
                 </columns>
 
                 <items>
@@ -94,8 +94,6 @@
                         
                         >
                         <cells>
-                            <Text id="_IDGenText31" text="{modelValidacaoDetail>tipoValidacaoCod}"/>
-                            <Text id="_IDGenText32" text="{modelValidacaoDetail>tipoValidacaoDesc}"/>
                             <Text id="_IDGenText17" text="{modelValidacaoDetail>cds_origem}"/>
                             <Text id="_IDGenText18" text="{modelValidacaoDetail>ID}"/>
                             <Text id="_IDGenText19" text="{modelValidacaoDetail>po}"/>
@@ -110,6 +108,8 @@
                             <Text id="_IDGenText28" text="{modelValidacaoDetail>Accdoc}"/>
                             <Text id="_IDGenText29" text="{modelValidacaoDetail>docNum}"/>
                             <Text id="_IDGenText30" text="{modelValidacaoDetail>docItem}"/>
+                            <Text id="_IDGenText31" text="{modelValidacaoDetail>docTypeCode}"/>
+                            <Text id="_IDGenText32" text="{modelValidacaoDetail>docTypeDescr}"/>
                         </cells>
                     </ColumnListItem>
                 </items>

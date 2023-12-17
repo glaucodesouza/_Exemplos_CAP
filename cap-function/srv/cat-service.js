@@ -740,39 +740,39 @@ module.exports = cds.service.impl(async function () {
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
-            // .where `outlier = false
-            //         and ASSETTYPECODE in ('00300','00400','00500','00600','03300','03400','07400','07500','07600')
-            //         and occodedest is null
-            //         and octypedest is null
-            //         and ocdescrdest is null
-            //         and occode is null
-            //         and octype is null
-            //         and ocdescr is null`
+            .where `outlier = false
+                    and ASSETTYPECODE in ('00300','00400','00500','00600','03300','03400','07400','07500','07600')
+                    and occodedest is null
+                    and octypedest is null
+                    and ocdescrdest is null
+                    and occode is null
+                    and octype is null
+                    and ocdescr is null`
             .limit(10)
         );
 
 
-        if (oSelect.length == 0) {
-        //teste glauco
-        let dados_teste = [{
-            po      : "101010",
-            poItem  : "10",
-            docNum  : "589098",
-            docItem : "10",
-            gjahr   : "2019",
-            belnr   : "5100000087",
-            buzei   : "00001",
-           cpuDt    : "25/12/1998",
-           cpuTm    : "23:59:59",
-           serialNo : "87897as89789789789",
-           batch    : "",
-           nm       : "90784390",
+        // if (oSelect.length == 0) {
+        // //teste glauco
+        // let dados_teste = [{
+        //     po      : "101010",
+        //     poItem  : "10",
+        //     docNum  : "589098",
+        //     docItem : "10",
+        //     gjahr   : "2019",
+        //     belnr   : "5100000087",
+        //     buzei   : "00001",
+        //    cpuDt    : "25/12/1998",
+        //    cpuTm    : "23:59:59",
+        //    serialNo : "87897as89789789789",
+        //    batch    : "",
+        //    nm       : "90784390",
        
-           tipoValidacaoCod: 1,
-           tipoValidacaoDesc: "Descrição do tipo de validação teste 1"
-        }];
-        return dados_teste;
-        }
+        //    tipoValidacaoCod: 1,
+        //    tipoValidacaoDesc: "Descrição do tipo de validação teste 1"
+        // }];
+        // return dados_teste;
+        // }
 
         //Preencher o campo Tipo de Validação
         oSelect.forEach(result => {
@@ -789,7 +789,7 @@ module.exports = cds.service.impl(async function () {
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
-            // .where `outlier = false and gm is null and status = 'NotProcessed'`
+            .where `outlier = false and gm is null and status = 'NotProcessed'`
             .limit(10)
         );
     
@@ -814,69 +814,111 @@ module.exports = cds.service.impl(async function () {
     this.on("selectValidacao3", async req => {
         // Validacao 3 - Verificar se tem registro sem Descrição do NM
         const oSelect = await db.run(
-            SELECT.one.columns(["COUNT(*) as count"])
+            SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
             .where `nmdescription is null and NMDESCRALTERNATIVE is null and outlier = false and nm is null`
+            .limit(10)
         );
     
+        //Preencher o campo Tipo de Validação
+        oSelect.forEach(result => {
+            result.tipoValidacaoCod = 3;
+            result.tipoValidacaoDesc = 'Verificar se tem registro sem Descrição do NM';
+        });
+
         return oSelect;
     });
 
     this.on("selectValidacao4", async req => {
         // Validacao 4 - Verificar se tem registro com DOCNUM  e sem ITMNUM
         const oSelect = await db.run(
-            SELECT.one.columns(["COUNT(*) as count"])
+            SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
             .where `docnum is not null and docitem is null`
+            .limit(10)
         );
     
+        //Preencher o campo Tipo de Validação
+        oSelect.forEach(result => {
+            result.tipoValidacaoCod = 4;
+            result.tipoValidacaoDesc = 'Verificar se tem registro com DOCNUM  e sem ITMNUM';
+        });
+
         return oSelect;
     });
 
     this.on("selectValidacao5", async req => {
         // Validacao 5 - Verificar se tem registro sem DOCNUM  e com ITMNUM
         const oSelect = await db.run(
-            SELECT.one.columns(["COUNT(*) as count"])
+            SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
             .where `docnum is null and docitem is not null`
+            .limit(10)
         );
     
+        //Preencher o campo Tipo de Validação
+        oSelect.forEach(result => {
+            result.tipoValidacaoCod = 5;
+            result.tipoValidacaoDesc = 'Verificar se tem registro sem DOCNUM  e com ITMNUM';
+        });
+
         return oSelect;
     });
 
     this.on("selectValidacao6", async req => {
         // Validacao 6 - Verificar se tem registro sem Doc.contábil que não tenha vindo da FINAN
         const oSelect = await db.run(
-            SELECT.one.columns(["COUNT(*) as count"])
+            SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
             .where `outlier = false and origem_dados != 'CDS_YEC_AT_FINAN' 
                 and ACCDOC is null 
                 and doctypecode not in ('10000','10050','10051','10090','10093','10099','10110','10120','10121','10125','10126','10150','10500','10550','10750','10999','11000','11090','11093','11099','11100','11150','11200','11210','11250','11260','11500','11550','11750','11999','12050','12051','12100','12150','12222','12500','12700','77001','77002','77003','77777')
                 and tpmov != '861'`
+            .limit(10)
         );
     
+        //Preencher o campo Tipo de Validação
+        oSelect.forEach(result => {
+            result.tipoValidacaoCod = 6;
+            result.tipoValidacaoDesc = 'Verificar se tem registro sem Doc.contábil que não tenha vindo da FINAN';
+        });
+
         return oSelect;
     });
 
     this.on("selectValidacao7", async req => {
         // Validacao 7 - DI,DDI preenchidas só na FINAN
         const oSelect = await db.run(
-            SELECT.one.columns(["COUNT(*) as count"])
+            SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
             .where `DINO is null and origem_dados = 'CDS_YEC_AT_FINAN' and cfop like '3%'`
+            .limit(10)
         );
     
+        //Preencher o campo Tipo de Validação
+        oSelect.forEach(result => {
+            result.tipoValidacaoCod = 7;
+            result.tipoValidacaoDesc = 'DI,DDI preenchidas só na FINAN';
+        });
+
         return oSelect;
     });
 
     this.on("selectValidacao8", async req => {
         // Validacao 8 - Imobilizado se tem descrição do BWTAR = * IMOB * e tem ANLN1 e ANLN2
         const oSelect = await db.run(
-            SELECT.one.columns(["COUNT(*) as count"])
+            SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
             .where `doctypedescr like '%IMOB%' and anln1 is null`
+            .limit(10)
         );
     
+        //Preencher o campo Tipo de Validação
+        oSelect.forEach(result => {
+            result.tipoValidacaoCod = 8;
+            result.tipoValidacaoDesc = 'Imobilizado se tem descrição do BWTAR = * IMOB * e tem ANLN1 e ANLN2';
+        });
+
         return oSelect;
     });
 
