@@ -1,83 +1,51 @@
-<mvc:View
-    controllerName="validadorcarga.controller.Worklist"
-    xmlns:mvc="sap.ui.core.mvc"
-    displayBlock="true"
+<mvc:View controllerName="validadorcarga.controller.Worklist"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
     xmlns:f="sap.f"
     xmlns:layout="sap.ui.layout"
-    height="100%"
->
-    <f:DynamicPage
-        id="dynamicPageId"
-        class="sapUiNoContentPadding"
-    >
+    height="100%">
+    <f:DynamicPage id="dynamicPageId" 
+        class="sapUiNoContentPadding">
         <!-- DynamicPage Title -->
-
+        
         <f:title>
             <f:DynamicPageTitle id="_IDGenDynamicPageTitle1">
                 <f:heading>
-                    <Title
-                        id="_IDGenTitle1"
-                        text="Validações de Carga AT"
-                    />
+                    <Title id="_IDGenTitle1" text="Validações de Carga AT"/>
                 </f:heading>
                 <f:actions>
-                    <Button
-                        id="_IDGencvButton1"
-                        type="Emphasized"
-                        text="Validar"
-                        press="onValidarButtonClick"
-                    />
+                    <Button id="_IDGencvButton1" 
+                            type="Emphasized" 
+                            text="Validar" 
+                            press="onValidarButtonClick" />
+                            
                 </f:actions>
             </f:DynamicPageTitle>
         </f:title>
         <!-- DynamicPage Header -->
         <f:header>
-            <!-- <f:DynamicPageHeader id="_IDGenDynamicPageHeader1" pinnable="true" >
-                <Button id="_IDGencvButton1" type="Default" text="Validar" press="onValidarButtonClick" />
-            </f:DynamicPageHeader> -->
+            <f:DynamicPageHeader id="_IDGenDynamicPageHeader1" pinnable="true" >
+                <Text id="_IDGenText3" text="{modelWorklist>/textoQtdeRegsInbound}"/>
+            </f:DynamicPageHeader>    
         </f:header>
         <f:content>
-            <layout:VerticalLayout
-                id="_IDGenVerticalLayout1"
-                width="100%"
-                class="sapUiSmallMarginTop"
-            >
-                <layout:Grid
-                    id="_IDGenGrid1"
-                    content="{modelValidacoesWorklist>/}"
-                    vSpacing="0.5"
-                    defaultSpan="XL12 L12 M12 S12"
-                >
-                    <VBox
-                        id="_IDGenVBox1"
-                        width="100%"
-                        height="50px"
-                    >
-                        <f:Card
-                            id="_IDGenCard"
-                            width="100%"
-                            height="50px"
-                        >
+        
+		    <layout:VerticalLayout id="_IDGenVerticalLayout1"
+				width="100%"
+				class="sapUiSmallMarginTop">
+                <layout:Grid id="_IDGenGrid1" content="{modelValidacoesWorklist>/}" vSpacing="0.5" defaultSpan="XL12 L12 M12 S12">
+                    <VBox id="_IDGenVBox1" width="100%" height="50px">
+                        <f:Card id="_IDGenCard" width="100%" height="50px" >
                             <f:content>
-                                <VBox
-                                    id="_IDGenVBox"
-                                    width="100%"
-                                >
-                                    <HBox id="_IDGenHBox1">
-                                        <Link
-                                            id="_IDGenText2"
-                                            class="Texto"
-                                            text="{modelValidacoesWorklist>tipoValidacaoCod}-{modelValidacoesWorklist>tipoValidacaoDesc}"
-                                            press='onValidacaoWorklistClick'
-                                        />
-                                        <core:Icon
-                                            id="_IDGenIcon"
+                                <VBox id="_IDGenVBox" width="100%" >
+                                    <HBox id="_IDGenHBox1" >
+                                        <Link id="_IDGenText2" class="Texto" text="{modelValidacoesWorklist>tipoValidacaoCod}-{modelValidacoesWorklist>tipoValidacaoDesc}, ({modelValidacoesWorklist>contador} registros)" press='onValidacaoWorklistClick'/> 
+                                        <core:Icon id="_IDGenIcon"
                                             src="{= ${modelValidacoesWorklist>statusValido} === '' ? '' : ${modelValidacoesWorklist>statusValido} === 'Sucesso' ? 'sap-icon://message-success' : 'sap-icon://message-error' }"
                                             class="size2"
-                                            color="{= ${modelValidacoesWorklist>statusValido} === '' ? '#FFFFFF' : ${modelValidacoesWorklist>statusValido} === 'Sucesso' ? '#00FF00' : '#FF0000' }"
-                                        />
+                                            color="{= ${modelValidacoesWorklist>statusValido} === '' ? '#FFFFFF' : ${modelValidacoesWorklist>statusValido} === 'Sucesso' ? '#00FF00' : '#FF0000' }" > 
+                                        </core:Icon>
                                     </HBox>
                                 </VBox>
                             </f:content>

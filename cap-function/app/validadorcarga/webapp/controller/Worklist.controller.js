@@ -11,6 +11,46 @@ sap.ui.define([
         return Controller.extend("validadorcarga.controller.Worklist", {
             onInit: function () {
 
+                this.limparDados();
+
+                // //Criar a tabela de dados e Model p/ o WORKLIST com as TODAS as Validacoes
+                // let dadosValidacoesWorklist = [];
+                // let modelValidacoesWorklist = new JSONModel();
+                // modelValidacoesWorklist.setData(dadosValidacoesWorklist);
+                // this.getView().setModel(modelValidacoesWorklist,"modelValidacoesWorklist");
+
+                // //Criar a tabela de dados e Model local p/ o OBJECT PAGE 
+                // var dadosValidacaoDetail = [];
+                // var modelValidacaoDetail = new JSONModel();
+                // modelValidacaoDetail.setData(dadosValidacaoDetail);
+                // this.getView().setModel(modelValidacaoDetail,"modelValidacaoDetail");
+
+                // //model c/ count(*) da tab. Inbound
+                // let dadosWorklist = [{
+                //     textoQtdeRegsInbound: ''
+                // }];
+                // let modelWorklist = new JSONModel();
+                // modelWorklist.setData(dadosWorklist);
+                // this.getView().setModel(modelWorklist,"modelWorklist");
+
+                
+
+            },
+
+            onValidarButtonClick: function (oEvent) {
+                this.limparDados();
+                this.requestCountInbound();
+                this.requestValidacao1();
+                this.requestValidacao2();
+                this.requestValidacao3();
+                this.requestValidacao4();
+                this.requestValidacao5();
+                this.requestValidacao6();
+                this.requestValidacao7();
+                this.requestValidacao8();
+            },
+
+            limparDados: function (params) {
                 //Criar a tabela de dados e Model p/ o WORKLIST com as TODAS as Validacoes
                 let dadosValidacoesWorklist = [];
                 let modelValidacoesWorklist = new JSONModel();
@@ -23,17 +63,48 @@ sap.ui.define([
                 modelValidacaoDetail.setData(dadosValidacaoDetail);
                 this.getView().setModel(modelValidacaoDetail,"modelValidacaoDetail");
 
+                //model c/ count(*) da tab. Inbound
+                let dadosWorklist = [{
+                    textoQtdeRegsInbound: ''
+                }];
+                let modelWorklist = new JSONModel();
+                modelWorklist.setData(dadosWorklist);
+                this.getView().setModel(modelWorklist,"modelWorklist");
             },
-            onValidarButtonClick: function (oEvent) {
-                this.requestValidacao1();
-                this.requestValidacao2();
-                this.requestValidacao3();
-                this.requestValidacao4();
-                this.requestValidacao5();
-                this.requestValidacao6();
-                this.requestValidacao7();
-                this.requestValidacao8();
+
+            //-----------------------------------------------------------------------------------------
+            // Seleção de contador de registros
+            //-----------------------------------------------------------------------------------------
+            async requestCountInbound() {
+                await this.selectCountInbound();
             },
+            selectCountInbound() {
+                console.log("chamando selectCountInbound()")
+                return new Promise((resolve, reject) => {
+                    this.getView().getModel().read(`/selectCountInbound()`, {
+                        success: oData => {
+
+                            console.log("Sucesso selectCountInbound()", oData);
+                            
+                            let view = this.getView();
+                            let model = view.getModel("modelWorklist");
+                            let dados = model.getData();
+
+                            //adicionar registro da validacao atual
+                            dados.textoQtdeRegsInbound = `Qtde. Tab. INBOUND: ` + oData.selectCountInbound.count;
+                            //atualizar o modelo
+                            model.refresh();                      
+
+                        },
+                        error: oError => {
+                            console.log(oError);
+                        }
+                    })
+                })
+            },
+            //-----------------------------------------------------------------------------------------
+            // Validação 1
+            //-----------------------------------------------------------------------------------------
             async requestValidacao1() {
                 await this.selectValidacao1()
             },
@@ -42,7 +113,7 @@ sap.ui.define([
                 return new Promise((resolve, reject) => {
                     this.getView().getModel().read(`/selectValidacao1()`, {
                         success: oData => {
-
+                            debugger;
                             console.log("Sucesso Validacao 1", oData);
                             let view = this.getView();
                             let model = view.getModel("modelValidacoesWorklist");
@@ -51,28 +122,29 @@ sap.ui.define([
                             //---------------------------------------------------------------------
                             //Dados da Validação 1 (p/ Worklist)
                             //---------------------------------------------------------------------
-                            let dadosValidacao1 = {};
-                            dadosValidacao1.tipoValidacaoCod  = 1;
-                            dadosValidacao1.tipoValidacaoDesc = this.getOwnerComponent().definirTipoValid(1);
+                            let dadosValidacao = {};
+                            dadosValidacao.tipoValidacaoCod  = 1;
+                            dadosValidacao.tipoValidacaoDesc = this.getOwnerComponent().definirTipoValid(1);
+                            dadosValidacao.contador = oData.selectValidacao1.contador;
 
-                            if (oData.results.length == 0) {
-                                dadosValidacao1.statusValido      = 'Sucesso';
+                            if (oData.selectValidacao1.contador == 0) {
+                                dadosValidacao.statusValido      = 'Sucesso';
                             } else {
-                                dadosValidacao1.statusValido      = 'Erro';
+                                dadosValidacao.statusValido      = 'Erro';
                             };
 
                             //adicionar registro da validacao atual
-                            dados.push(dadosValidacao1);
+                            dados.push(dadosValidacao);
                             //atualizar o modelo
                             model.refresh();
 
                             //---------------------------------------------------------------------
                             //Dados da Validações 1 Detail (p/ Object Page)
                             //---------------------------------------------------------------------
-                            
+                            debugger;
                             let modelValidacaoDetail = new JSONModel();
                             this.getOwnerComponent().getModel(modelValidacaoDetail,"modelValidacaoDetail");
-                            let dadosValidacaoDetail = oData.results;
+                            let dadosValidacaoDetail = oData.selectValidacao1.registros;
                             modelValidacaoDetail.setData(dadosValidacaoDetail);
                             this.getOwnerComponent().setModel(modelValidacaoDetail,"modelValidacaoDetail");                          
 
@@ -84,6 +156,9 @@ sap.ui.define([
                 })
             },
 
+            //-----------------------------------------------------------------------------------------
+            // Validação 2
+            //-----------------------------------------------------------------------------------------
             async requestValidacao2() {
                 await this.selectValidacao2()
             },
@@ -103,8 +178,9 @@ sap.ui.define([
                             let dadosValidacao = {};
                             dadosValidacao.tipoValidacaoCod  = 2;
                             dadosValidacao.tipoValidacaoDesc = this.getOwnerComponent().definirTipoValid(2);
+                            dadosValidacao.contador = oData.selectValidacao2.contador;
                             
-                            if (oData.results.length == 0) {
+                            if (oData.selectValidacao2.contador == 0) {
                                 dadosValidacao.statusValido      = 'Sucesso';
                             } else {
                                 dadosValidacao.statusValido      = 'Erro';
@@ -115,15 +191,14 @@ sap.ui.define([
                             //atualizar o modelo
                             model.refresh();
                             
-
-                            
+                            debugger;
                             let modelValidacaoDetail = new JSONModel();
                             // this.getOwnerComponent().getModel(modelValidacaoDetail,"modelValidacaoDetail");
                             modelValidacaoDetail = this.getOwnerComponent().getModel("modelValidacaoDetail");
                             let dadosValidacaoDetail = modelValidacaoDetail.getData();
                             //adicionar registro da validacao atual
-                            for (let index = 0; index < oData.results.length; index++) {
-                                dadosValidacaoDetail.push(oData.results[index])
+                            for (let index = 0; index < oData.selectValidacao2.registros.length; index++) {
+                                dadosValidacaoDetail.push(oData.selectValidacao2.registros[index])
                             }
 
                         },
@@ -134,6 +209,9 @@ sap.ui.define([
                 })
             },
 
+            //-----------------------------------------------------------------------------------------
+            // Validação 3
+            //-----------------------------------------------------------------------------------------
             async requestValidacao3() {
                 await this.selectValidacao3();
             },
@@ -154,8 +232,9 @@ sap.ui.define([
                             let dadosValidacao = {};
                             dadosValidacao.tipoValidacaoCod  = 3;
                             dadosValidacao.tipoValidacaoDesc = this.getOwnerComponent().definirTipoValid(3);
+                            dadosValidacao.contador = oData.selectValidacao3.contador;
 
-                            if (oData.results.length == 0) {
+                            if (oData.selectValidacao3.contador == 0) {
                                 dadosValidacao.statusValido      = 'Sucesso';
                             } else {
                                 dadosValidacao.statusValido      = 'Erro';
@@ -174,8 +253,8 @@ sap.ui.define([
                             let dadosValidacaoDetail = modelValidacaoDetail.getData();
                             
                             //adicionar registro da validacao atual
-                            for (let index = 0; index < oData.results.length; index++) {
-                                dadosValidacaoDetail.push(oData.results[index])
+                            for (let index = 0; index < oData.selectValidacao3.registros.length; index++) {
+                                dadosValidacaoDetail.push(oData.selectValidacao3.registros[index])
                             }
                         },
                         error: oError => {
@@ -185,6 +264,9 @@ sap.ui.define([
                 })
             },
 
+            //-----------------------------------------------------------------------------------------
+            // Validação 4
+            //-----------------------------------------------------------------------------------------
             async requestValidacao4() {
                 await this.selectValidacao4();
             },
@@ -205,8 +287,9 @@ sap.ui.define([
                             let dadosValidacao = {};
                             dadosValidacao.tipoValidacaoCod  = 4;
                             dadosValidacao.tipoValidacaoDesc = this.getOwnerComponent().definirTipoValid(4);
+                            dadosValidacao.contador = oData.selectValidacao4.contador;
 
-                            if (oData.results.length == 0) {
+                            if (oData.selectValidacao4.contador == 0) {
                                 dadosValidacao.statusValido      = 'Sucesso';
                             } else {
                                 dadosValidacao.statusValido      = 'Erro';
@@ -225,8 +308,8 @@ sap.ui.define([
                             let dadosValidacaoDetail = modelValidacaoDetail.getData();
                             
                             //adicionar registro da validacao atual
-                            for (let index = 0; index < oData.results.length; index++) {
-                                dadosValidacaoDetail.push(oData.results[index])
+                            for (let index = 0; index < oData.selectValidacao4.registros.length; index++) {
+                                dadosValidacaoDetail.push(oData.selectValidacao4.registros[index])
                             }
                         },
                         error: oError => {
@@ -236,6 +319,9 @@ sap.ui.define([
                 })
             },
 
+            //-----------------------------------------------------------------------------------------
+            // Validação 5
+            //-----------------------------------------------------------------------------------------
             async requestValidacao5() {
                 await this.selectValidacao5();
             },
@@ -256,8 +342,9 @@ sap.ui.define([
                             let dadosValidacao = {};
                             dadosValidacao.tipoValidacaoCod  = 5;
                             dadosValidacao.tipoValidacaoDesc = this.getOwnerComponent().definirTipoValid(5);
+                            dadosValidacao.contador = oData.selectValidacao5.contador;
                             
-                            if (oData.results.length == 0) {
+                            if (oData.selectValidacao5.contador == 0) {
                                 dadosValidacao.statusValido      = 'Sucesso';
                             } else {
                                 dadosValidacao.statusValido      = 'Erro';
@@ -276,8 +363,8 @@ sap.ui.define([
                             let dadosValidacaoDetail = modelValidacaoDetail.getData();
                             
                             //adicionar registro da validacao atual
-                            for (let index = 0; index < oData.results.length; index++) {
-                                dadosValidacaoDetail.push(oData.results[index])
+                            for (let index = 0; index < oData.selectValidacao5.registros.length; index++) {
+                                dadosValidacaoDetail.push(oData.selectValidacao5.registros[index])
                             }
                         },
                         error: oError => {
@@ -287,6 +374,9 @@ sap.ui.define([
                 })
             },
 
+            //-----------------------------------------------------------------------------------------
+            // Validação 6
+            //-----------------------------------------------------------------------------------------
             async requestValidacao6() {
                 await this.selectValidacao6();
             },
@@ -307,8 +397,9 @@ sap.ui.define([
                             let dadosValidacao = {};
                             dadosValidacao.tipoValidacaoCod  = 6;
                             dadosValidacao.tipoValidacaoDesc = this.getOwnerComponent().definirTipoValid(6);
+                            dadosValidacao.contador = oData.selectValidacao6.contador;
 
-                            if (oData.results.length == 0) {
+                            if (oData.selectValidacao6.contador == 0) {
                                 dadosValidacao.statusValido      = 'Sucesso';
                             } else {
                                 dadosValidacao.statusValido      = 'Erro';
@@ -327,8 +418,8 @@ sap.ui.define([
                             let dadosValidacaoDetail = modelValidacaoDetail.getData();
                             
                             //adicionar registro da validacao atual
-                            for (let index = 0; index < oData.results.length; index++) {
-                                dadosValidacaoDetail.push(oData.results[index])
+                            for (let index = 0; index < oData.selectValidacao6.registros.length; index++) {
+                                dadosValidacaoDetail.push(oData.selectValidacao6.registros[index])
                             }
                         },
                         error: oError => {
@@ -338,6 +429,9 @@ sap.ui.define([
                 })
             },
 
+            //-----------------------------------------------------------------------------------------
+            // Validação 7
+            //-----------------------------------------------------------------------------------------
             async requestValidacao7() {
                 await this.selectValidacao7();
             },
@@ -359,11 +453,13 @@ sap.ui.define([
                             dadosValidacao.tipoValidacaoCod  = 7;
                             dadosValidacao.tipoValidacaoDesc = this.getOwnerComponent().definirTipoValid(7);
 
-                            if (oData.results.length == 0) {
+                            if (oData.selectValidacao7.contador == 0) {
                                 dadosValidacao.statusValido      = 'Sucesso';
                             } else {
                                 dadosValidacao.statusValido      = 'Erro';
                             };
+
+                            dadosValidacao.contador = oData.selectValidacao7.contador;
 
                             //adicionar registro da validacao atual
                             dados.push(dadosValidacao);
@@ -378,8 +474,8 @@ sap.ui.define([
                             let dadosValidacaoDetail = modelValidacaoDetail.getData();
                             
                             //adicionar registro da validacao atual
-                            for (let index = 0; index < oData.results.length; index++) {
-                                dadosValidacaoDetail.push(oData.results[index])
+                            for (let index = 0; index < oData.selectValidacao7.registros.length; index++) {
+                                dadosValidacaoDetail.push(oData.selectValidacao7.registros[index])
                             }
                         },
                         error: oError => {
@@ -389,6 +485,9 @@ sap.ui.define([
                 })
             },
 
+            //-----------------------------------------------------------------------------------------
+            // Validação 8
+            //-----------------------------------------------------------------------------------------
             async requestValidacao8() {
                 await this.selectValidacao8();
             },
@@ -410,11 +509,13 @@ sap.ui.define([
                             dadosValidacao.tipoValidacaoCod  = 8;
                             dadosValidacao.tipoValidacaoDesc = this.getOwnerComponent().definirTipoValid(8);
 
-                            if (oData.results.length == 0) {
+                            if (oData.selectValidacao8.contador == 0) {
                                 dadosValidacao.statusValido      = 'Sucesso';
                             } else {
                                 dadosValidacao.statusValido      = 'Erro';
                             };
+
+                            dadosValidacao.contador = oData.selectValidacao8.contador;
 
                             //adicionar registro da validacao atual
                             dados.push(dadosValidacao);
@@ -429,8 +530,8 @@ sap.ui.define([
                             let dadosValidacaoDetail = modelValidacaoDetail.getData();
                             
                             //adicionar registro da validacao atual
-                            for (let index = 0; index < oData.results.length; index++) {
-                                dadosValidacaoDetail.push(oData.results[index])
+                            for (let index = 0; index < oData.selectValidacao8.registros.length; index++) {
+                                dadosValidacaoDetail.push(oData.selectValidacao8.registros[index])
                             }
                         },
                         error: oError => {

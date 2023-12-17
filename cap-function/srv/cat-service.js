@@ -737,6 +737,27 @@ module.exports = cds.service.impl(async function () {
 
     this.on("selectValidacao1", async req => {
         // Validacao 1 - Verificar se tem registro sem Objeto contábil com DOCTYPECODE *300, *400, *500 e *600
+
+        let result = {
+            contador: 0,
+            registros : []
+        }
+
+        oCount = await db.run(
+            SELECT.one.columns(["COUNT(*) as count"])
+            .from(ASSET_VERSION_INBOUND)
+            .where `outlier = false
+                    and ASSETTYPECODE in ('00300','00400','00500','00600','03300','03400','07400','07500','07600')
+                    and occodedest is null
+                    and octypedest is null
+                    and ocdescrdest is null
+                    and occode is null
+                    and octype is null
+                    and ocdescr is null`
+        );
+
+        result.contador = oCount.count;
+
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
@@ -751,41 +772,85 @@ module.exports = cds.service.impl(async function () {
             .limit(10)
         );
 
-
-        // if (oSelect.length == 0) {
-        // //teste glauco
-        // let dados_teste = [{
-        //     po      : "101010",
-        //     poItem  : "10",
-        //     docNum  : "589098",
-        //     docItem : "10",
-        //     gjahr   : "2019",
-        //     belnr   : "5100000087",
-        //     buzei   : "00001",
-        //    cpuDt    : "25/12/1998",
-        //    cpuTm    : "23:59:59",
-        //    serialNo : "87897as89789789789",
-        //    batch    : "",
-        //    nm       : "90784390",
-       
-        //    tipoValidacaoCod: 1,
-        //    tipoValidacaoDesc: "Descrição do tipo de validação teste 1"
-        // }];
-        // return dados_teste;
-        // }
-
         //Preencher o campo Tipo de Validação
         oSelect.forEach(result => {
             result.tipoValidacaoCod = 1;
             result.tipoValidacaoDesc = 'Verificar se tem registro sem Objeto contábil com DOCTYPECODE *300, *400, *500 e *600';
         });
-        debugger;
-        return oSelect;
+
+        for (let index = 0; index < oSelect.length; index++) {
+            result.registros.push(oSelect[index])
+        }
+
+        return result;
         // return oSelect.count;
     });
 
+    // this.on("selectValidacao1", async req => {
+    //     // Validacao 1 - Verificar se tem registro sem Objeto contábil com DOCTYPECODE *300, *400, *500 e *600
+    //     const oSelect = await db.run(
+    //         SELECT.columns(["*"])
+    //         .from(ASSET_VERSION_INBOUND)
+    //         .where `outlier = false
+    //                 and ASSETTYPECODE in ('00300','00400','00500','00600','03300','03400','07400','07500','07600')
+    //                 and occodedest is null
+    //                 and octypedest is null
+    //                 and ocdescrdest is null
+    //                 and occode is null
+    //                 and octype is null
+    //                 and ocdescr is null`
+    //         .limit(10)
+    //     );
+
+
+    //     // if (oSelect.length == 0) {
+    //     // //teste glauco
+    //     // let dados_teste = [{
+    //     //     po      : "101010",
+    //     //     poItem  : "10",
+    //     //     docNum  : "589098",
+    //     //     docItem : "10",
+    //     //     gjahr   : "2019",
+    //     //     belnr   : "5100000087",
+    //     //     buzei   : "00001",
+    //     //    cpuDt    : "25/12/1998",
+    //     //    cpuTm    : "23:59:59",
+    //     //    serialNo : "87897as89789789789",
+    //     //    batch    : "",
+    //     //    nm       : "90784390",
+       
+    //     //    tipoValidacaoCod: 1,
+    //     //    tipoValidacaoDesc: "Descrição do tipo de validação teste 1"
+    //     // }];
+    //     // return dados_teste;
+    //     // }
+
+    //     //Preencher o campo Tipo de Validação
+    //     oSelect.forEach(result => {
+    //         result.tipoValidacaoCod = 1;
+    //         result.tipoValidacaoDesc = 'Verificar se tem registro sem Objeto contábil com DOCTYPECODE *300, *400, *500 e *600';
+    //     });
+    //     debugger;
+    //     return oSelect;
+    //     // return oSelect.count;
+    // });
+
     this.on("selectValidacao2", async req => {
         // Validacao 2 - Verificar se tem registro sem Grupo de Mercadoria
+        
+        let result = {
+            contador: 0,
+            registros : []
+        }
+
+        oCount = await db.run(
+            SELECT.one.columns(["COUNT(*) as count"])
+            .from(ASSET_VERSION_INBOUND)
+            .where `outlier = false and gm is null and status = 'NotProcessed'`
+        );
+
+        result.contador = oCount.count;
+
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
@@ -799,7 +864,12 @@ module.exports = cds.service.impl(async function () {
             result.tipoValidacaoDesc = 'Verificar se tem registro sem Grupo de Mercadoria';
         });
 
-        return oSelect;
+        for (let index = 0; index < oSelect.length; index++) {
+            result.registros.push(oSelect[index])
+        }
+
+        return result;
+        // return oSelect.count;
 
         //original validação 2
         // const oSelect = await db.run(
@@ -813,6 +883,20 @@ module.exports = cds.service.impl(async function () {
 
     this.on("selectValidacao3", async req => {
         // Validacao 3 - Verificar se tem registro sem Descrição do NM
+
+        let result = {
+            contador: 0,
+            registros : []
+        }
+
+        oCount = await db.run(
+            SELECT.one.columns(["COUNT(*) as count"])
+            .from(ASSET_VERSION_INBOUND)
+            .where `nmdescription is null and NMDESCRALTERNATIVE is null and outlier = false and nm is null`
+        );
+
+        result.contador = oCount.count;
+
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
@@ -826,11 +910,31 @@ module.exports = cds.service.impl(async function () {
             result.tipoValidacaoDesc = 'Verificar se tem registro sem Descrição do NM';
         });
 
-        return oSelect;
+        // result.registros = oSelect;
+        for (let index = 0; index < oSelect.length; index++) {
+            result.registros.push(oSelect[index])
+        }
+
+        return result;
+        // return oSelect.count;
     });
 
     this.on("selectValidacao4", async req => {
         // Validacao 4 - Verificar se tem registro com DOCNUM  e sem ITMNUM
+
+        let result = {
+            contador: 0,
+            registros : []
+        }
+
+        oCount = await db.run(
+            SELECT.one.columns(["COUNT(*) as count"])
+            .from(ASSET_VERSION_INBOUND)
+            .where `docnum is not null and docitem is null`
+        );
+
+        result.contador = oCount.count;
+
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
@@ -844,11 +948,31 @@ module.exports = cds.service.impl(async function () {
             result.tipoValidacaoDesc = 'Verificar se tem registro com DOCNUM  e sem ITMNUM';
         });
 
-        return oSelect;
+        // result.registros = oSelect;
+        for (let index = 0; index < oSelect.length; index++) {
+            result.registros.push(oSelect[index])
+        }
+
+        return result;
+        // return oSelect.count;
     });
 
     this.on("selectValidacao5", async req => {
         // Validacao 5 - Verificar se tem registro sem DOCNUM  e com ITMNUM
+
+        let result = {
+            contador: 0,
+            registros : []
+        }
+
+        oCount = await db.run(
+            SELECT.one.columns(["COUNT(*) as count"])
+            .from(ASSET_VERSION_INBOUND)
+            .where `docnum is null and docitem is not null`
+        );
+
+        result.contador = oCount.count;
+
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
@@ -862,11 +986,33 @@ module.exports = cds.service.impl(async function () {
             result.tipoValidacaoDesc = 'Verificar se tem registro sem DOCNUM  e com ITMNUM';
         });
 
-        return oSelect;
+        for (let index = 0; index < oSelect.length; index++) {
+            result.registros.push(oSelect[index])
+        }
+
+        return result;
+        // return oSelect.count;
     });
 
     this.on("selectValidacao6", async req => {
         // Validacao 6 - Verificar se tem registro sem Doc.contábil que não tenha vindo da FINAN
+
+        let result = {
+            contador: 0,
+            registros : []
+        }
+
+        oCount = await db.run(
+            SELECT.one.columns(["COUNT(*) as count"])
+            .from(ASSET_VERSION_INBOUND)
+            .where `outlier = false and origem_dados != 'CDS_YEC_AT_FINAN' 
+                and ACCDOC is null 
+                and doctypecode not in ('10000','10050','10051','10090','10093','10099','10110','10120','10121','10125','10126','10150','10500','10550','10750','10999','11000','11090','11093','11099','11100','11150','11200','11210','11250','11260','11500','11550','11750','11999','12050','12051','12100','12150','12222','12500','12700','77001','77002','77003','77777')
+                and tpmov != '861'`
+        );
+
+        result.contador = oCount.count;
+
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
@@ -883,11 +1029,30 @@ module.exports = cds.service.impl(async function () {
             result.tipoValidacaoDesc = 'Verificar se tem registro sem Doc.contábil que não tenha vindo da FINAN';
         });
 
-        return oSelect;
+        for (let index = 0; index < oSelect.length; index++) {
+            result.registros.push(oSelect[index])
+        }
+
+        return result;
+        // return oSelect.count;
     });
 
     this.on("selectValidacao7", async req => {
         // Validacao 7 - DI,DDI preenchidas só na FINAN
+
+        let result = {
+            contador: 0,
+            registros : []
+        }
+
+        oCount = await db.run(
+            SELECT.one.columns(["COUNT(*) as count"])
+            .from(ASSET_VERSION_INBOUND)
+            .where `DINO is null and origem_dados = 'CDS_YEC_AT_FINAN' and cfop like '3%'`
+        );
+
+        result.contador = oCount.count;
+
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
@@ -901,11 +1066,30 @@ module.exports = cds.service.impl(async function () {
             result.tipoValidacaoDesc = 'DI,DDI preenchidas só na FINAN';
         });
 
-        return oSelect;
+        for (let index = 0; index < oSelect.length; index++) {
+            result.registros.push(oSelect[index])
+        }
+
+        return result;
+        // return oSelect.count;
     });
 
     this.on("selectValidacao8", async req => {
         // Validacao 8 - Imobilizado se tem descrição do BWTAR = * IMOB * e tem ANLN1 e ANLN2
+
+        let result = {
+            contador: 0,
+            registros : []
+        }
+
+        oCount = await db.run(
+            SELECT.one.columns(["COUNT(*) as count"])
+            .from(ASSET_VERSION_INBOUND)
+            .where `doctypedescr like '%IMOB%' and anln1 is null`
+        );
+
+        result.contador = oCount.count;
+
         const oSelect = await db.run(
             SELECT.columns(["*"])
             .from(ASSET_VERSION_INBOUND)
@@ -919,8 +1103,24 @@ module.exports = cds.service.impl(async function () {
             result.tipoValidacaoDesc = 'Imobilizado se tem descrição do BWTAR = * IMOB * e tem ANLN1 e ANLN2';
         });
 
+        for (let index = 0; index < oSelect.length; index++) {
+            result.registros.push(oSelect[index])
+        }
+
+        return result;
+        // return oSelect.count;
+    });
+
+    this.on("selectCountInbound", async req => {
+        
+        const oSelect = await db.run(
+            SELECT.one.columns(["COUNT(*) as count"])
+            .from(ASSET_VERSION_INBOUND)
+        );
+
         return oSelect;
     });
+    
 
 });
 
